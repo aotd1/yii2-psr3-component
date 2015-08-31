@@ -38,7 +38,9 @@ class Logger extends Component
      */
     public function log($level, $message, array $context = [])
     {
-        \Yii::getLogger()->log($message, $this->logLevelMap[$level], $this->category);
+        //@TODO: log somewhere other $context parameters
+        $category = isset($context['category']) ? $context['category'] : $this->defaultCategory;
+        \Yii::getLogger()->log($message, $this->logLevelMap[$level], $category);
     }
 
     /**
