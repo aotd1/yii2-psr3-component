@@ -1,0 +1,29 @@
+{
+  "name": "aotd/yii2-psr3-component",
+  "description": "Allows you to use the Yii2 logger with libraries that are expecting a PSR-3 compatible logger. ",
+  "homepage": "https://github.com/aotd1/yii2-psr3-component",
+  "keywords": [
+    "PSR-3",
+    "yii2",
+    "log",
+    "logger"
+  ],
+  "type": "yii2-extension",
+  "prefer-stable": true,
+  "support": {
+    "issues": "https://github.com/aotd1/yii2-psr3-component/issues",
+    "source": "https://github.com/aotd1/yii2-psr3-component"
+  },
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "require-dev": {
+    "yiisoft/yii2": "*",
+    "psr/log": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "aotd\\PSR3LogAdapter\\": "src/"
+    }
+  }
+}
