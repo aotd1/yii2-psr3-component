@@ -1,6 +1,6 @@
 {
   "name": "aotd/yii2-psr3-component",
-  "description": "Allows you to use the Yii2 logger with libraries that are expecting a PSR-3 compatible logger. ",
+  "description": "Allows you to use the Yii2 logger with libraries that are expecting a PSR-3 compatible logger",
   "homepage": "https://github.com/aotd1/yii2-psr3-component",
   "keywords": [
     "PSR-3",

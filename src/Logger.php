@@ -17,7 +17,7 @@ class Logger extends Component
 
     public $defaultCategory = 'PSR-3-log';
 
-    protected $logLevelMap = [
+    public $logLevelMap = [
         'emergency' => YiiLogger::LEVEL_ERROR,
         'alert' => YiiLogger::LEVEL_ERROR,
         'critical' => YiiLogger::LEVEL_ERROR,
