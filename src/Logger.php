@@ -2,6 +2,8 @@
 
 namespace aotd\PSR3LogAdapter;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerTrait;
 use yii\base\component;
 use yii\log\Logger as YiiLogger;
 
@@ -9,8 +11,10 @@ use yii\log\Logger as YiiLogger;
  * Class Logger
  * @package aotd\PSR3LogAdapter
  */
-class Logger extends Component
+class Logger extends Component implements LoggerInterface
 {
+    use LoggerTrait;
+
     /**
      * @var string Yii category for the logged messages.
      */
@@ -19,13 +23,13 @@ class Logger extends Component
 
     public $logLevelMap = [
         'emergency' => YiiLogger::LEVEL_ERROR,
-        'alert' => YiiLogger::LEVEL_ERROR,
-        'critical' => YiiLogger::LEVEL_ERROR,
-        'error' => YiiLogger::LEVEL_ERROR,
-        'warning' => YiiLogger::LEVEL_WARNING,
-        'notice' => YiiLogger::LEVEL_INFO,
-        'info' => YiiLogger::LEVEL_INFO,
-        'debug' => YiiLogger::LEVEL_TRACE,
+        'alert'     => YiiLogger::LEVEL_ERROR,
+        'critical'  => YiiLogger::LEVEL_ERROR,
+        'error'     => YiiLogger::LEVEL_ERROR,
+        'warning'   => YiiLogger::LEVEL_WARNING,
+        'notice'    => YiiLogger::LEVEL_INFO,
+        'info'      => YiiLogger::LEVEL_INFO,
+        'debug'     => YiiLogger::LEVEL_TRACE,
     ];
 
     /**
@@ -38,115 +42,25 @@ class Logger extends Component
      */
     public function log($level, $message, array $context = [])
     {
-        //@TODO: log somewhere other $context parameters
+        /** @var \yii\log\Logger $logger */
+        $logger = \Yii::getLogger();
+
         $category = isset($context['category']) ? $context['category'] : $this->defaultCategory;
-        \Yii::getLogger()->log($message, $this->logLevelMap[$level], $category);
+
+        $message = $this->interpolate($message, $context);
+
+        $logger->log($message, $this->logLevelMap[$level], $category);
     }
 
-    /**
-     * System is unusable.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function emergency($message, array $context = [])
+    private function interpolate($message, array $context = [])
     {
-        $this->log('emergency', $message, $context);
-    }
+        $replace = [];
+        foreach ($context as $key => $val) {
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                $replace['{' . $key . '}'] = $val;
+            }
+        }
 
-    /**
-     * Action must be taken immediately.
-     *
-     * Example: Entire website down, database unavailable, etc. This should
-     * trigger the SMS alerts and wake you up.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function alert($message, array $context = [])
-    {
-        $this->log('alert', $message, $context);
-    }
-
-    /**
-     * Critical conditions.
-     *
-     * Example: Application component unavailable, unexpected exception.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function critical($message, array $context = [])
-    {
-        $this->log('critical', $message, $context);
-    }
-
-    /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function error($message, array $context = [])
-    {
-        $this->log('error', $message, $context);
-    }
-
-    /**
-     * Exceptional occurrences that are not errors.
-     *
-     * Example: Use of deprecated APIs, poor use of an API, undesirable things
-     * that are not necessarily wrong.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function warning($message, array $context = [])
-    {
-        $this->log('warning', $message, $context);
-    }
-
-    /**
-     * Normal but significant events.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function notice($message, array $context = [])
-    {
-        $this->log('notice', $message, $context);
-    }
-
-    /**
-     * Interesting events.
-     *
-     * Example: User logs in, SQL logs.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function info($message, array $context = [])
-    {
-        $this->log('info', $message, $context);
-    }
-
-    /**
-     * Detailed debug information.
-     *
-     * @param string $message
-     * @param array $context
-     * @return null
-     */
-    public function debug($message, array $context = [])
-    {
-        $this->log('debug', $message, $context);
+        return strtr($message, $replace);
     }
 }
