@@ -1,5 +1,6 @@
 {
   "name": "aotd/yii2-psr3-component",
+  "license": "MIT",
   "description": "Allows you to use the Yii2 logger with libraries that are expecting a PSR-3 compatible logger",
   "homepage": "https://github.com/aotd1/yii2-psr3-component",
   "keywords": [
@@ -18,7 +19,7 @@
     "php": ">=5.4.0"
   },
   "require-dev": {
-    "yiisoft/yii2": "*",
+    "yiisoft/yii2": "^2.0",
     "psr/log": "^1.0"
   },
   "autoload": {
